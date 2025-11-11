@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // <-- import Link
 
 export default function Navbar() {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             {/* Brand Logo / Name */}
-            <a className="navbar-brand" href="/">GiftLink</a>
+            <Link className="navbar-brand" to="/">GiftLink</Link>
 
             <button
                 className="navbar-toggler"
@@ -20,12 +21,12 @@ export default function Navbar() {
 
             <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav ml-auto">
-                    {/* Task 1: Add links to Home and Gifts */}
+                    {/* Links using React Router */}
                     <li className="nav-item">
-                        <a className="nav-link" href="/home.html">Home</a> {/* Link to home page */}
+                        <Link className="nav-link" to="/">Home</Link> {/* Home page */}
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="/app">Gifts</a> {/* Link to MainPage */}
+                        <Link className="nav-link" to="/app">Gifts</Link> {/* MainPage */}
                     </li>
                 </ul>
             </div>
