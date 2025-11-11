@@ -1,73 +1,59 @@
 const express = require('express');
 const router = express.Router();
 const connectToDatabase = require('../models/db');
+const logger = require('../logger');
 
 // GET all gifts
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
+    logger.info('GET /api/gifts called');
     try {
-        // Task 1: Connect to MongoDB and store connection to db constant
         const db = await connectToDatabase();
-
-        // Task 2: Retrieve the gifts collection
         const collection = db.collection('gifts');
+        const gifts = await collection.find({}).toArray();
 
-        // Task 3: Fetch all gifts
-        const gifts = await collection.find().toArray();
-
-        // Task 4: Return gifts as JSON
         res.json(gifts);
-
     } catch (e) {
-        console.error('Error fetching gifts:', e);
-        res.status(500).send('Error fetching gifts');
+        logger.error('Error fetching all gifts', e);
+        next(e);
     }
 });
 
 // GET a single gift by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
+    logger.info(`GET /api/gifts/${req.params.id} called`);
     try {
-        // Task 1: Connect to MongoDB
         const db = await connectToDatabase();
-
-        // Task 2: Retrieve the gifts collection
         const collection = db.collection('gifts');
 
-        // Get ID from params and handle numeric IDs automatically
         const idParam = req.params.id;
         const id = isNaN(idParam) ? idParam : Number(idParam);
 
-        // Task 3: Find a specific gift by ID
         const gift = await collection.findOne({ id: id });
-
         if (!gift) {
+            logger.warn(`Gift with ID ${id} not found`);
             return res.status(404).send('Gift not found');
         }
 
-        // Return the gift as JSON
         res.json(gift);
-
     } catch (e) {
-        console.error('Error fetching gift:', e);
-        res.status(500).send('Error fetching gift');
+        logger.error(`Error fetching gift with ID ${req.params.id}`, e);
+        next(e);
     }
 });
 
 // POST a new gift
 router.post('/', async (req, res, next) => {
+    logger.info('POST /api/gifts called');
     try {
         const db = await connectToDatabase();
         const collection = db.collection('gifts');
 
-        // Insert the new gift
         const result = await collection.insertOne(req.body);
-
-        // Fetch the inserted document to return
         const newGift = await collection.findOne({ _id: result.insertedId });
 
         res.status(201).json(newGift);
-
     } catch (e) {
-        console.error('Error adding gift:', e);
+        logger.error('Error adding new gift', e);
         next(e);
     }
 });
