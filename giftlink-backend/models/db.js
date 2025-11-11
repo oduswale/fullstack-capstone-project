@@ -1,26 +1,29 @@
 // db.js
 require('dotenv').config();
-const MongoClient = require('mongodb').MongoClient;
+const { MongoClient } = require('mongodb');
 
-// MongoDB connection URL with authentication options
-let url = `${process.env.MONGO_URL}`;  // or use process.env.MONGO_URI if you prefer
+// Use environment variable or fallback to local MongoDB
+let url = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
+const dbName = 'giftdb';
 
 let dbInstance = null;
-const dbName = "giftdb";
 
 async function connectToDatabase() {
-    // Reuse the existing instance if already connected
+    // Reuse existing instance if already connected
     if (dbInstance) {
         return dbInstance;
     }
 
     // Create a new MongoClient
-    const client = new MongoClient(url);
+    const client = new MongoClient(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
 
     try {
         // Task 1: Connect to MongoDB
         await client.connect();
-        console.log("Connected successfully to MongoDB");
+        console.log(`Connected successfully to MongoDB at ${url}`);
 
         // Task 2: Connect to database giftDB and store in variable dbInstance
         dbInstance = client.db(dbName);
@@ -30,7 +33,8 @@ async function connectToDatabase() {
 
     } catch (err) {
         console.error("Failed to connect to MongoDB", err);
-        throw err;
+        dbInstance = null;
+        return null; // allow server to continue running
     }
 }
 
