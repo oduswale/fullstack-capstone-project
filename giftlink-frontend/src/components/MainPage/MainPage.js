@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import urlConfig from '../config/urlConfig'; // adjust path if needed
+import urlConfig from '../urlConfig'; // adjust path if needed
 
 export default function MainPage() {
     const [gifts, setGifts] = useState([]);
