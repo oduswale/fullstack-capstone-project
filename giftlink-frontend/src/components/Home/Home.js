@@ -1,17 +1,16 @@
-// src/components/Home/Home.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Home.css'; // optional, if you want custom styles
+import './Home.css'; // Import the CSS
 
 export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="container my-5" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-      <div className="text-center">
-        <h1 className="display-4 mb-3">GiftLink</h1>
-        <h2 className="mb-4">Share Gifts and Joy!</h2>
+    <div className="home-body">
+      <div className="content text-center">
+        <h1>GiftLink</h1>
+        <h2>Share Gifts and Joy!</h2>
         <p className="lead">
           "Sharing is the essence of community. It is through giving that we enrich and perpetuate both our lives and the lives of others."
         </p>

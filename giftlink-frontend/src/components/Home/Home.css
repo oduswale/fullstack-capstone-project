@@ -1,0 +1,78 @@
+/* Home page container instead of body */
+.home-body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f4f4f4;
+    position: relative;
+}
+
+/* Background blur */
+.home-body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/images/gift-bg.jpg') no-repeat center center/cover;
+    filter: blur(8px);
+    z-index: -1;
+    opacity: 0.8;
+}
+
+/* Content box */
+.content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #333;
+    max-width: 700px;
+    padding: 40px;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings and paragraphs */
+h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #16a085;
+    margin-bottom: 20px;
+}
+
+.lead {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+    font-weight: 600;
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
