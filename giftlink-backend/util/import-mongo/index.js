@@ -1,50 +1,43 @@
 require('dotenv').config();
-const MongoClient = require('mongodb').MongoClient;
+const { MongoClient } = require('mongodb');
 const fs = require('fs');
 
-// MongoDB connection URL with authentication options
-let url = `${process.env.MONGO_URL}`;
-let filename = `${__dirname}/gifts.json`;
+// MongoDB connection URL (no auth needed for your current local setup)
+const url = "mongodb://localhost:27017"; 
 const dbName = 'giftdb';
 const collectionName = 'gifts';
+const filename = `${__dirname}/gifts.json`;
 
-// notice you have to load the array of gifts into the data object
+// Load gifts data
 const data = JSON.parse(fs.readFileSync(filename, 'utf8')).docs;
 
-// connect to database and insert data into the collection
+// Connect to MongoDB and insert data
 async function loadData() {
     const client = new MongoClient(url);
 
     try {
-        // Connect to the MongoDB client
         await client.connect();
         console.log("Connected successfully to server");
 
-        // database will be created if it does not exist
         const db = client.db(dbName);
-
-        // collection will be created if it does not exist
         const collection = db.collection(collectionName);
-        let cursor = await collection.find({});
-        let documents = await cursor.toArray();
 
-        if(documents.length == 0) {
-            // Insert data into the collection
+        const documents = await collection.find({}).toArray();
+
+        if (documents.length === 0) {
             const insertResult = await collection.insertMany(data);
             console.log('Inserted documents:', insertResult.insertedCount);
         } else {
-            console.log("Gifts already exists in DB")
+            console.log("Gifts already exist in DB");
         }
     } catch (err) {
         console.error(err);
     } finally {
-        // Close the connection
         await client.close();
     }
 }
 
+// Run the script
 loadData();
 
-module.exports = {
-    loadData,
-  };
+module.exports = { loadData };
