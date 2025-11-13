@@ -2,38 +2,34 @@ import React, { useState } from 'react';
 import './LoginPage.css';
 
 function LoginPage() {
-    // useState hooks
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // handleLogin function
     const handleLogin = async () => {
-        console.log("Login invoked");
-
         try {
-            const response = await fetch("http://localhost:5000/api/login", {
-                method: "POST",
+            const response = await fetch('http://localhost:3060/api/auth/login', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",         // Content-Type header
-                    "Authorization": "Bearer sampleAuthToken"   // Authorization header
+                    'Content-Type': 'application/json', // required
+                    'Authorization': 'Bearer example-token' // placeholder for token if needed
                 },
                 body: JSON.stringify({ email, password })
             });
 
             const data = await response.json();
+            console.log('Login response:', data);
 
             if (response.ok) {
-                console.log("Login successful:", data);
-                alert("Login successful!");
-                sessionStorage.setItem("auth-token", data.token);
+                // Save auth token
+                sessionStorage.setItem('auth-token', data.token);
+                alert('Login successful!');
             } else {
-                alert(data.message || "Login failed");
+                alert('Login failed: ' + data.message);
             }
         } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred during login");
+            console.error('Error logging in:', error);
         }
-    };
+    }
 
     return (
         <div className="container mt-5">
@@ -42,12 +38,11 @@ function LoginPage() {
                     <div className="login-card p-4 border rounded">
                         <h2 className="text-center mb-4 font-weight-bold">Login</h2>
 
-                        {/* Email input */}
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">Email</label>
                             <input
                                 id="email"
-                                type="email"
+                                type="text"
                                 className="form-control"
                                 placeholder="Enter your email"
                                 value={email}
@@ -55,7 +50,6 @@ function LoginPage() {
                             />
                         </div>
 
-                        {/* Password input */}
                         <div className="mb-4">
                             <label htmlFor="password" className="form-label">Password</label>
                             <input
@@ -68,7 +62,6 @@ function LoginPage() {
                             />
                         </div>
 
-                        {/* Login button */}
                         <button className="btn btn-primary w-100 mb-3" onClick={handleLogin}>
                             Login
                         </button>

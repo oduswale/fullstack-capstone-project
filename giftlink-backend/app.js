@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pinoLogger = require('./logger');
-
 const connectToDatabase = require('./models/db');
 const { loadData } = require("./util/import-mongo/index");
 
@@ -23,6 +22,7 @@ app.use(express.json());
 // Route files
 const giftRoutes = require('./routes/giftRoutes');
 const searchRoutes = require('./routes/searchRoutes');
+const authRoutes = require('./routes/authRoutes'); // <-- Add auth routes
 
 // Logging middleware
 const pinoHttp = require('pino-http');
@@ -32,6 +32,7 @@ app.use(pinoHttp({ logger }));
 // Use Routes
 app.use('/api/gifts', giftRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/auth', authRoutes); // <-- Register auth routes
 
 // Global Error Handler
 app.use((err, req, res, next) => {

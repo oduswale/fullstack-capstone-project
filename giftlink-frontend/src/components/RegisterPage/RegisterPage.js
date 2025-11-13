@@ -8,13 +8,11 @@ function RegisterPage() {
     const [password, setPassword] = useState('');
 
     const handleRegister = async () => {
-        console.log("Register invoked");
-
         try {
-            const response = await fetch("http://localhost:5000/api/register", {
-                method: "POST", // ✅ method attribute
-                headers: {      // ✅ headers attribute
-                    "Content-Type": "application/json"
+            const response = await fetch('http://localhost:3060/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // specify JSON
                 },
                 body: JSON.stringify({
                     firstName,
@@ -25,18 +23,17 @@ function RegisterPage() {
             });
 
             const data = await response.json();
+            console.log('Registration response:', data);
 
             if (response.ok) {
-                alert("Registration successful!");
-                console.log("Server response:", data);
+                alert('Registration successful! You can now login.');
             } else {
-                alert(data.message || "Registration failed");
+                alert('Registration failed: ' + data.message);
             }
         } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred during registration.");
+            console.error('Error registering user:', error);
         }
-    };
+    }
 
     return (
         <div className="container mt-5">
@@ -46,24 +43,24 @@ function RegisterPage() {
                         <h2 className="text-center mb-4 font-weight-bold">Register</h2>
 
                         <div className="mb-3">
-                            <label htmlFor="firstName" className="form-label">First Name</label>
+                            <label htmlFor="firstName" className="form-label">FirstName</label>
                             <input
                                 id="firstName"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter your first name"
+                                placeholder="Enter your firstName"
                                 value={firstName}
                                 onChange={(e) => setFirstName(e.target.value)}
                             />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="lastName" className="form-label">Last Name</label>
+                            <label htmlFor="lastName" className="form-label">LastName</label>
                             <input
                                 id="lastName"
                                 type="text"
                                 className="form-control"
-                                placeholder="Enter your last name"
+                                placeholder="Enter your lastName"
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
                             />
@@ -73,7 +70,7 @@ function RegisterPage() {
                             <label htmlFor="email" className="form-label">Email</label>
                             <input
                                 id="email"
-                                type="email"
+                                type="text"
                                 className="form-control"
                                 placeholder="Enter your email"
                                 value={email}
@@ -93,7 +90,10 @@ function RegisterPage() {
                             />
                         </div>
 
-                        <button className="btn btn-primary w-100 mb-3" onClick={handleRegister}>Register</button>
+                        <button className="btn btn-primary w-100 mb-3" onClick={handleRegister}>
+                            Register
+                        </button>
+
                         <p className="mt-4 text-center">
                             Already a member? <a href="/app/login" className="text-primary">Login</a>
                         </p>

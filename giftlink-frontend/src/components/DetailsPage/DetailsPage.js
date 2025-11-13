@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './DetailsPage.css';
-import {urlConfig} from '../../config';
+import { urlConfig } from '../../config';
 
 function DetailsPage() {
     const navigate = useNavigate();
@@ -11,108 +11,81 @@ function DetailsPage() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const authenticationToken = sessionStorage.getItem('auth-token');
-        if (!authenticationToken) {
-            // Task 1: Check for authentication and redirect
-            navigate('/app/login');
-        }
-
-        // get the gift to be rendered on the details page
+        // Fetch gift details
         const fetchGift = async () => {
             try {
-                // Task 2: Fetch gift details
-                const url = `${urlConfig.backendUrl}/api/gifts/${productId}`;
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+                const response = await fetch(`${urlConfig.backendUrl}/api/gifts/${productId}`);
+                if (!response.ok) throw new Error('Failed to fetch gift');
                 const data = await response.json();
                 setGift(data);
-            } catch (error) {
-                setError(error.message);
+            } catch (err) {
+                setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchGift();
-
-        // Task 3: Scroll to top on component mount
         window.scrollTo(0, 0);
-
-    }, [productId, navigate]);
+    }, [productId]);
 
     const handleBackClick = () => {
-        // Task 4: Handle back click
         navigate(-1);
     };
 
-    //The comments have been hardcoded for this project.
-    const comments = [
-        {
-            author: "John Doe",
-            comment: "I would like this!"
-        },
-        {
-            author: "Jane Smith",
-            comment: "Just DMed you."
-        },
-        {
-            author: "Alice Johnson",
-            comment: "I will take it if it's still available."
-        },
-        {
-            author: "Mike Brown",
-            comment: "This is a good one!"
-        },
-        {
-            author: "Sarah Wilson",
-            comment: "My family can use one. DM me if it is still available. Thank you!"
-        }
-    ];
-
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div>Loading gift details...</div>;
     if (error) return <div>Error: {error}</div>;
     if (!gift) return <div>Gift not found</div>;
 
     return (
-        <div className="container mt-5">
-            <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Back</button>
-            <div className="card product-details-card">
+        <div className="container mt-5" style={{ maxHeight: '90vh', overflowY: 'auto', paddingBottom: '2rem' }}>
+            <button className="btn btn-secondary mb-3" onClick={handleBackClick}>
+                Back
+            </button>
+
+            <div className="card product-details-card mb-4">
                 <div className="card-header text-white">
                     <h2 className="details-title">{gift.name}</h2>
                 </div>
                 <div className="card-body">
-                    <div className="image-placeholder-large">
+                    <div
+                        className="image-placeholder-large mb-3"
+                        style={{ height: '400px', backgroundColor: '#f0f0f0' }}
+                    >
                         {gift.image ? (
-                            // Task 5: Display gift image
-                            <img src={gift.image} alt={gift.name} className="product-image-large" />
+                            <img
+                                src={gift.image.startsWith('http') ? gift.image : `${urlConfig.backendUrl}${gift.image}`}
+                                alt={gift.name}
+                                className="img-fluid h-100 w-100"
+                                style={{ objectFit: 'cover' }}
+                                onError={(e) => {
+                                    e.target.src = 'https://via.placeholder.com/400x400?text=No+Image';
+                                }}
+                            />
                         ) : (
-                            <div className="no-image-available-large">No Image Available</div>
+                            <div className="no-image-available-large d-flex align-items-center justify-content-center h-100 text-muted">
+                                No Image Available
+                            </div>
                         )}
                     </div>
-                    {/* Task 6: Display gift details */}
-                    <p><strong>Category:</strong> 
-                        {gift.category}
-                    </p>
-                    <p><strong>Condition:</strong> 
-                        {gift.condition}
-                    </p>
-                    <p><strong>Date Added:</strong> 
-                        {gift.dateAdded}
-                    </p>
-                    <p><strong>Age (Years):</strong> 
-                        {gift.age}
-                    </p>
-                    <p><strong>Description:</strong> 
-                        {gift.description}
-                    </p>
+
+                    <p><strong>Category:</strong> {gift.category}</p>
+                    <p><strong>Condition:</strong> {gift.condition}</p>
+                    <p><strong>Date Added:</strong> {new Date(gift.date_added * 1000).toLocaleDateString()}</p>
+                    <p><strong>Age (Years):</strong> {gift.age_years}</p>
+                    <p><strong>Description:</strong> {gift.description}</p>
                 </div>
             </div>
+
             <div className="comments-section mt-4">
                 <h3 className="mb-3">Comments</h3>
-                {/* Task 7: Render comments section */}
-                {comments.map((comment, index) => (
+                {[
+                    { author: "John Doe", comment: "I would like this!" },
+                    { author: "Jane Smith", comment: "Just DMed you." },
+                    { author: "Alice Johnson", comment: "I will take it if it's still available." },
+                    { author: "Mike Brown", comment: "This is a good one!" },
+                    { author: "Sarah Wilson", comment: "My family can use one. DM me if it is still available. Thank you!" }
+                ].map((comment, index) => (
                     <div key={index} className="card mb-3">
                         <div className="card-body">
                             <p className="comment-author"><strong>{comment.author}:</strong></p>

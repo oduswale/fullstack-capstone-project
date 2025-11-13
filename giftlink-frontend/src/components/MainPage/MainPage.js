@@ -1,76 +1,94 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { urlConfig } from '../../config';
 
+function MainPage() {
+  const [gifts, setGifts] = useState([]);
+  const navigate = useNavigate();
 
-export default function MainPage() {
-    const [gifts, setGifts] = useState([]);
-    const navigate = useNavigate();
-
-    // Task 1: Fetch all gifts
-    useEffect(() => {
-        const fetchGifts = async () => {
-            try {
-                const url = `${urlConfig.backendUrl}/api/gifts`;
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error; ${response.status}`);
-                }
-                const data = await response.json();
-                setGifts(data);
-            } catch (error) {
-                console.log('Fetch error: ' + error.message);
-            }
-        };
-        fetchGifts();
-    }, []);
-
-    // Task 3: Format timestamp
-    const formatDate = (timestamp) => {
-        const date = new Date(timestamp * 1000); // convert seconds to ms
-        return date.toLocaleDateString('default', { 
-            month: 'long', 
-            day: 'numeric', 
-            year: 'numeric' 
-        });
+  useEffect(() => {
+    const fetchGifts = async () => {
+      try {
+        const url = `${urlConfig.backendUrl}/api/gifts`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP error; ${response.status}`);
+        const data = await response.json();
+        setGifts(data);
+      } catch (error) {
+        console.log('Fetch error: ' + error.message);
+      }
     };
 
-    // Task 2: Navigate to details page
-    const goToDetails = (productId) => {
-        navigate(`/app/product/${productId}`);
-    };
+    fetchGifts();
+  }, []);
 
-    return (
-        <div className="container my-4">
-            <h1 className="mb-4">Available Gifts</h1>
-            <div className="row">
-                {gifts.length > 0 ? (
-                    gifts.map((gift) => (
-                        <div className="col-md-4 mb-4" key={gift._id}>
-                            <div className="card h-100" onClick={() => goToDetails(gift._id)} style={{ cursor: 'pointer' }}>
-                                
-                                {/* Task 4: Display gift image or placeholder */}
-                                <div className="image-placeholder">
-                                    {gift.image ? (
-                                        <img src={gift.image} alt={gift.name} className="card-img-top" />
-                                    ) : (
-                                        <div className="no-image-available">No Image Available</div>
-                                    )}
-                                </div>
+  const goToDetailsPage = (productId) => {
+    navigate(`/app/product/${productId}`);
+  };
 
-                                <div className="card-body">
-                                    {/* Task 5: Display gift name */}
-                                    <h5 className="card-title">{gift.name}</h5>
-                                    {/* Task 6: Display formatted date */}
-                                    <p className="card-text">{formatDate(gift.date_added)}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleString('default', { month: 'long', day: 'numeric', year: 'numeric' });
+  };
+
+  const getConditionClass = (condition) => {
+    return condition === 'New' ? 'list-group-item-success' : 'list-group-item-warning';
+  };
+
+  return (
+    <div
+      className="container mt-5"
+      style={{
+        maxHeight: 'calc(100vh - 100px)', // occupy almost full height
+        overflowY: 'auto', // allow scrolling
+        paddingBottom: '2rem',
+      }}
+    >
+      <div className="row">
+        {gifts.map((gift) => (
+          <div key={gift.id} className="col-md-4 mb-4">
+            <div className="card product-card h-100">
+              <div
+                className="image-placeholder"
+                style={{ height: '200px', backgroundColor: '#f0f0f0' }}
+              >
+                {gift.image ? (
+                  <img
+                    src={gift.image}
+                    alt={gift.name}
+                    className="img-fluid h-100 w-100"
+                    style={{ objectFit: 'cover' }}
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/200x200?text=No+Image';
+                    }}
+                  />
                 ) : (
-                    <p>No gifts available at the moment.</p>
+                  <div className="no-image-available d-flex align-items-center justify-content-center h-100 text-muted">
+                    No Image Available
+                  </div>
                 )}
+              </div>
+              <div className="card-body">
+                <h5 className="card-title">{gift.name}</h5>
+                <p className={`card-text ${getConditionClass(gift.condition)}`}>
+                  {gift.condition}
+                </p>
+                <p className="card-text date-added">{formatDate(gift.date_added)}</p>
+              </div>
+              <div className="card-footer">
+                <button
+                  onClick={() => goToDetailsPage(gift.id)}
+                  className="btn btn-primary w-100"
+                >
+                  View Details
+                </button>
+              </div>
             </div>
-        </div>
-    );
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
+
+export default MainPage;
