@@ -22,8 +22,8 @@ export default function Navbar() {
             <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav ml-auto">
                     {/* Links using React Router */}
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/">Home</Link> {/* Home page */}
+                   <li className="nav-item">
+                    <a className="nav-link" href="/home.html">Home</a> {/* Link to home.html */}
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/app">Gifts</Link> {/* MainPage */}
