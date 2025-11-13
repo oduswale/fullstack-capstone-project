@@ -1,42 +1,49 @@
-/* Container card for the login form */
+/* Full page wrapper to center the login form */
+.login-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* top-aligned but still centered horizontally */
+    min-height: calc(100vh - 70px); /* subtract navbar height */
+    padding-top: 30px; /* space from navbar */
+    background-color: #f4f4f4;
+}
+
+/* Login card */
 .login-card {
     background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
     padding: 30px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .login-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
 
-/* Heading style */
+/* Heading */
 .login-card h2 {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #007bff; /* Bootstrap primary color */
+    color: #007bff;
+    margin-bottom: 1.5rem;
 }
 
-/* Form labels */
-.login-card .form-label {
-    font-weight: 500;
-    color: #333;
-}
-
-/* Form input fields */
+/* Form controls */
 .login-card .form-control {
     border-radius: 6px;
     border: 1px solid #ccc;
     padding: 10px 12px;
     font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 1rem;
 }
 
 .login-card .form-control:focus {
     border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
     outline: none;
 }
 
@@ -55,7 +62,7 @@
     transform: translateY(-2px);
 }
 
-/* Links inside the card */
+/* Links inside card */
 .login-card a {
     text-decoration: none;
     font-weight: 500;
@@ -68,6 +75,10 @@
 
 /* Responsive spacing */
 @media (max-width: 768px) {
+    .login-page-wrapper {
+        padding-top: 20px;
+    }
+
     .login-card {
         padding: 20px 15px;
     }
